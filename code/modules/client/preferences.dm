@@ -78,8 +78,6 @@ var/list/preferences_datums = list()
 
 	var/unlock_content = 0
 
-	var/clientfps = 60
-
 /datum/preferences/New(client/C)
 	blood_type = random_blood_type()
 	custom_names["ai"] = pick(ai_names)
@@ -337,7 +335,6 @@ var/list/preferences_datums = list()
 			dat += "<b>Midround Antagonist:</b> <a href='?_src_=prefs;preference=allow_midround_antag'>[(toggles & MIDROUND_ANTAG) ? "Yes" : "No"]</a><br>"
 			if(config.allow_Metadata)
 				dat += "<b>OOC Notes:</b> <a href='?_src_=prefs;preference=metadata;task=input'>Edit </a><br>"
-			dat += "<b>FPS:</b> <a href='?_src_=prefs;preference=clientfps;task=input'>[clientfps]</a>"
 
 			if(user.client)
 				if(user.client.holder)
@@ -432,10 +429,10 @@ var/list/preferences_datums = list()
 		HTML += "<tr bgcolor='[job.selection_color]'><td width='60%' align='right'>"
 		var/rank = job.title
 		lastJob = job
-		if(jobban_isbanned(user, "catban") && rank != "Assistant")
+		if(jobban_isbanned(user, "catban") && rank != "Assistant") 
 			HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[CAT-BANNED\]</b></font></td></tr>"
 			continue
-		if(jobban_isbanned(user, "cluwneban") && rank != "Assistant")
+		if(jobban_isbanned(user, "cluwneban") && rank != "Assistant") 
 			HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[CLUWNE-BANNED\]</b></font></td></tr>"
 			continue
 		if(jobban_isbanned(user, rank))
@@ -1037,17 +1034,6 @@ var/list/preferences_datums = list()
 					chat_toggles ^= CHAT_PULLR
 				if("allow_midround_antag")
 					toggles ^= MIDROUND_ANTAG
-				if ("clientfps")
-					var/version_message
-					if (user.client && user.client.byond_version < 511)
-						version_message = "\nYou need to be using byond version 511 or later to take advantage of this feature, your version of [user.client.byond_version] is too low"
-					if (world.byond_version < 511)
-						version_message += "\nThis server does not currently support client side fps. You can set now for when it does."
-					var/desiredfps = input(user, "Choose your desired fps.[version_message]\n(0 = synced with server tick rate (currently:[world.fps]))", "Character Preference", clientfps)  as null|num
-					if (!isnull(desiredfps))
-						clientfps = desiredfps
-						if (world.byond_version >= 511 && user.client && user.client.byond_version >= 511)
-							user.client.vars["fps"] = clientfps
 				if("save")
 					save_preferences()
 					save_character()
